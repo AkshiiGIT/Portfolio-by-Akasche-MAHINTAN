@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akasche Mahintan — Développeur Web &amp; Blockchain</title>
+<meta name="description" content="Portfolio d'Akasche Mahintan — développeur full-stack, produits IA et blockchain, du prototype au déploiement.">
+<meta name="theme-color" content="#F7F6F3">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<style>
+  :root{
+    --bg: #F7F6F3;
+    --bg-panel: #FFFFFF;
+    --line: #E2E0D9;
+    --line-soft: #ECEAE4;
+    --ink: #17181B;
+    --ink-soft: #8C6A28;
+    --ink-faint: #96793A;
+    --accent: #B3282E;
+    --accent-dim: #8C1F24;
+    --accent-ink: #FFFFFF;
+    --btn-ghost-bg: rgba(23,24,27,0.035);
+    --radius: 3px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+    --disp: 'Space Grotesk', var(--sans);
+    --header-h: 64px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 64px 64px;
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  }
+
+  a{ color: inherit; }
+  :focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .wrap{ max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+  @media (max-width: 420px){ .wrap{ padding: 0 18px; } }
+
+  .tick{ position: relative; border: 1px solid var(--line); background: var(--bg-panel); }
+  .tick::before, .tick::after{ content:""; position:absolute; width:10px; height:10px; border: 1px solid var(--accent-dim); }
+  .tick::before{ top:-1px; left:-1px; border-right:none; border-bottom:none; }
+  .tick::after{ bottom:-1px; right:-1px; border-left:none; border-top:none; }
+
+  /* ---------- header ---------- */
+  header{
+    position: sticky; top: 0; z-index: 30; height: var(--header-h);
+    background: rgba(247,246,243,0.82);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav{ position: relative; display:flex; align-items:center; justify-content: space-between; height:100%; padding: 0 28px; max-width: 1080px; margin: 0 auto; }
+  .nav-id{ font-family: var(--mono); font-size: 13px; color: var(--ink); text-decoration: none; display:flex; align-items:center; gap:8px; }
+  .nav-id .dot{ width:7px; height:7px; background: var(--accent); border-radius: 1px; }
+  .nav-links{ display:flex; gap: 28px; list-style:none; margin:0; padding:0; font-family: var(--mono); font-size: 13px; }
+  .nav-links a{ text-decoration:none; color: var(--ink-soft); transition: color .15s; }
+  .nav-links a:hover{ color: var(--accent); }
+
+  .nav-right{ display:flex; align-items:center; gap: 24px; }
+
+  .lang-toggle{
+    font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
+    border: 1px solid var(--line); background: var(--btn-ghost-bg); color: var(--ink-soft);
+    padding: 6px 11px; border-radius: 3px; cursor:pointer; transition: color .15s, border-color .15s;
+  }
+  .lang-toggle:hover{ color: var(--accent); border-color: var(--accent-dim); }
+
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; align-items:center; gap:5px;
+    width: 36px; height: 36px; margin: -6px -8px -6px 0;
+    background:none; border:none; cursor:pointer; padding:0;
+  }
+  .nav-toggle span{ display:block; width:20px; height:2px; background: var(--ink); transition: transform .2s ease, opacity .2s ease; }
+  .nav-toggle.is-open span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.is-open span:nth-child(2){ opacity:0; }
+  .nav-toggle.is-open span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 720px){
+    .nav-right{ gap: 12px; }
+    .nav-toggle{ display:flex; }
+    .nav-links{
+      flex-direction: column; gap:0; position:absolute; top: var(--header-h); left:0; right:0;
+      background: var(--bg-panel); border-bottom: 1px solid var(--line);
+      max-height:0; overflow:hidden; transition: max-height .25s ease;
+      font-size: 14px;
+    }
+    .nav-links.is-open{ max-height: 340px; }
+    .nav-links li{ border-top: 1px solid var(--line); }
+    .nav-links a{ display:block; padding: 15px 28px; }
+  }
+
+  /* ---------- 3D hero (scrollytelling : voiture fixe, les scènes défilent) ---------- */
+  .hero-scroll{ position: relative; }
+  .hero-scroll.js-scenes{ height: calc(3 * (100dvh - var(--header-h))); }
+
+  .hero-3d{
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 60% at 62% 42%, rgba(179,40,46,0.06) 0%, transparent 60%),
+      var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-scroll.js-scenes .hero-3d{
+    position: sticky; top: var(--header-h);
+    height: calc(100vh - var(--header-h));
+    height: calc(100dvh - var(--header-h));
+    min-height: 560px;
+    max-height: 980px;
+  }
+  .hero-photo{
+    position: absolute; inset: 0; z-index: 0;
+    background-image: url('assets/e30-m3.webp');
+    background-size: cover;
+    background-position: 78% 55%;
+    filter: grayscale(70%) brightness(1.1) contrast(0.96) saturate(0.55);
+    transform: scale(1.03);
+  }
+  #webgl{
+    position: absolute; inset: 0; width: 100%; height: 100%; display:block;
+    z-index: 1; opacity: 0; transition: opacity 1.1s ease;
+  }
+  #webgl.is-ready{ opacity: 1; }
+  .hero-vignette{
+    position:absolute; inset:0; z-index:2; pointer-events:none;
+    background:
+      linear-gradient(115deg, rgba(247,246,243,0.96) 0%, rgba(247,246,243,0.72) 38%, rgba(247,246,243,0.12) 62%),
+      radial-gradient(ellipse 90% 70% at 50% 100%, rgba(247,246,243,0.94) 0%, transparent 55%);
+  }
+  @media (max-width: 760px){
+    /* sur mobile le texte occupe toute la largeur (pas que la moitié gauche comme sur desktop) :
+       il faut un voile clair sur toute la largeur pour que ce soit lisible partout */
+    .hero-vignette{
+      background:
+        linear-gradient(180deg, rgba(247,246,243,0.95) 0%, rgba(247,246,243,0.88) 55%, rgba(247,246,243,0.55) 78%, rgba(247,246,243,0.18) 100%),
+        radial-gradient(ellipse 120% 60% at 50% 100%, rgba(247,246,243,0.9) 0%, transparent 60%);
+    }
+  }
+
+
+  .hero-overlay{ position: relative; z-index: 3; height: 100%; }
+  .hero-scene{ padding: 24px 0 40px; }
+  .hero-scroll.js-scenes .hero-scene{
+    position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center;
+    /* inset:0 sur un élément absolu s'aligne sur le bord du parent, pas sur son padding :
+       on redéclare ici le même padding horizontal que .wrap pour que le texte ne touche jamais l'écran */
+    padding: 24px 28px 88px;
+    opacity:0; pointer-events:none;
+    transform: translate3d(0, 28px, 0);
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+  }
+  .hero-scroll.js-scenes .hero-scene.is-active{ pointer-events:auto; }
+  @media (max-width: 420px){
+    .hero-scroll.js-scenes .hero-scene{ padding-left: 18px; padding-right: 18px; }
+  }
+  .kicker{
+    font-family: var(--mono); font-size: 13px; color: var(--accent); margin: 0 0 18px;
+    display:flex; align-items:baseline; gap: 10px;
+  }
+  .kicker::before{ content:""; display:inline-block; width: 22px; height: 1px; background: var(--accent); transform: translateY(-3px); }
+  h1{
+    font-family: var(--disp); font-weight: 700; font-size: clamp(2.3rem, 5vw, 3.8rem);
+    line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 22px; max-width: 15ch;
+  }
+  .hero-lede{
+    font-size: clamp(1.15rem, 2vw, 1.5rem); color: var(--ink-soft); max-width: 46ch; margin: 0; line-height: 1.5;
+    -webkit-text-stroke: 0.5px rgba(15,16,18,0.65);
+    text-shadow: 0 1px 3px rgba(15,16,18,0.3);
+  }
+  .hero-actions{ display:flex; gap: 14px; flex-wrap: wrap; }
+  .hero-copy{ max-width: 640px; }
+
+  .btn{
+    font-family: var(--mono); font-size: 13px; padding: 12px 20px; border-radius: var(--radius);
+    text-decoration:none; display:inline-flex; align-items:center; gap: 8px;
+    border: 1px solid var(--line); transition: border-color .15s, background .15s, color .15s;
+  }
+  .btn-primary{ background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 500; }
+  .btn-primary:hover{ filter: brightness(1.1); }
+  .btn-ghost{ color: var(--ink); background: var(--btn-ghost-bg); }
+  .btn-ghost:hover{ border-color: var(--accent-dim); color: var(--accent); }
+
+  .hero-stats{ display:flex; gap: 1px; background: var(--line); border: 1px solid var(--line); width: fit-content; }
+  .hero-stats .stat{ background: var(--bg-panel); padding: 16px 26px; min-width: 150px; }
+  .hero-stats b{ display:block; font-family: var(--disp); font-size: 1.05rem; margin-bottom: 4px; }
+  .hero-stats span{ font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); }
+  @media (max-width: 640px){ .hero-stats{ display:none; } }
+
+  .hero-progress{
+    position:absolute; right: 28px; top:50%; z-index: 3;
+    transform: translateY(-50%);
+    display:flex; flex-direction:column; gap: 10px;
+  }
+  .hero-progress span{
+    display:block; width:6px; height:6px; border-radius:50%;
+    background: var(--line); transition: background .25s ease, transform .25s ease;
+  }
+  .hero-progress span.is-on{ background: var(--accent); transform: scale(1.4); }
+  @media (max-width: 640px){ .hero-progress{ display:none; } }
+
+  .scroll-cue{
+    position: absolute; left: 28px; bottom: 26px; z-index: 3;
+    display:flex; align-items:center; gap: 10px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.04em;
+  }
+  .scroll-cue i{ display:block; width:1px; height: 26px; background: linear-gradient(var(--accent), transparent); animation: cue 1.8s ease-in-out infinite; }
+  @keyframes cue{ 0%{ transform: scaleY(0); transform-origin: top; } 50%{ transform: scaleY(1); transform-origin: top; } 51%{ transform-origin: bottom; } 100%{ transform: scaleY(0); transform-origin: bottom; } }
+  @media (max-width: 640px){ .scroll-cue{ display:none; } }
+
+  /* ---------- sections ---------- */
+  section{ padding: 76px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type{ border-bottom: none; }
+  .section-head{ display:flex; align-items:flex-end; justify-content: space-between; gap: 20px; margin-bottom: 44px; flex-wrap: wrap; }
+  .section-num{ font-family: var(--mono); font-size: 13px; color: var(--accent); margin: 0 0 10px; }
+  h2{ font-family: var(--disp); font-weight: 600; font-size: clamp(1.6rem, 3vw, 2.1rem); margin: 0; letter-spacing: -0.005em; }
+  .section-note{ font-size: 14px; color: var(--ink-faint); max-width: 32ch; text-align: right; }
+  @media (max-width: 640px){ .section-note{ text-align:left; } }
+
+  .skills-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  @media (max-width: 900px){ .skills-grid{ grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 560px){ .skills-grid{ grid-template-columns: 1fr; } }
+  .skill-card{ background: var(--bg-panel); padding: 26px 24px; }
+  .skill-card h3{ font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--accent); margin: 0 0 16px; }
+  .skill-list{ list-style:none; margin:0; padding:0; display:flex; flex-wrap: wrap; gap: 7px; }
+  .skill-list li{ font-family: var(--mono); font-size: 12px; color: var(--ink-soft); border: 1px solid var(--line); padding: 5px 9px; border-radius: var(--radius); }
+
+  .project{
+    display:grid; grid-template-columns: 90px 1fr 200px; gap: 28px; padding: 30px 24px;
+    border: 1px solid var(--line); margin-bottom: -1px; background: var(--bg-panel);
+    transition: border-color .2s, transform .2s;
+  }
+  .project:hover{ border-color: var(--accent-dim); transform: translateX(2px); }
+  @media (max-width: 800px){ .project{ grid-template-columns: 1fr; gap: 14px; } }
+  .project-index{ font-family: var(--mono); font-size: 13px; color: var(--ink-faint); padding-top: 2px; }
+  .project-body h3{ font-family: var(--disp); font-size: 1.2rem; font-weight: 600; margin: 0 0 8px; }
+  .project-body p{ color: var(--ink-soft); margin: 0 0 14px; font-size: 14.5px; max-width: 56ch; }
+  .project-tags{ list-style:none; display:flex; flex-wrap:wrap; gap: 7px; margin:0; padding:0; }
+  .project-tags li{ font-family: var(--mono); font-size: 11.5px; color: var(--accent); border: 1px solid var(--line-soft); padding: 4px 8px; border-radius: var(--radius); }
+  .project-meta{ font-family: var(--mono); font-size: 12px; color: var(--ink-faint); display:flex; flex-direction: column; gap: 10px; padding-top: 3px; }
+  .project-meta a{ color: var(--ink-soft); text-decoration:none; border-bottom: 1px solid var(--line); }
+  .project-meta a:hover{ color: var(--accent); border-color: var(--accent-dim); }
+  .status{ display:flex; align-items:center; gap:7px; }
+  .status .led{ width:7px; height:7px; border-radius:50%; background: var(--accent); flex:none; }
+  .status.paused .led{ background: var(--ink-faint); }
+
+  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+  /* liste verticale — utilisée sur mobile, où le survol n'existe pas */
+  .timeline{ position:relative; padding-left: 28px; }
+  .timeline::before{ content:""; position:absolute; left: 3px; top: 6px; bottom: 6px; width: 1px; background: var(--line); }
+  .tl-item{ position:relative; padding-bottom: 40px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{ content:""; position:absolute; left: -28px; top: 5px; width: 7px; height:7px; background: var(--bg); border: 1px solid var(--accent); border-radius:50%; }
+  .tl-date{ font-family: var(--mono); font-size: 12px; color: var(--accent); margin: 0 0 6px; }
+  .tl-item h3{ font-family: var(--disp); font-size: 1.08rem; font-weight: 600; margin: 0 0 6px; }
+  .tl-item p{ color: var(--ink-soft); margin:0; font-size: 14.5px; max-width: 58ch; }
+
+  /* frise horizontale — desktop/tablette : juste des points + dates, détail au survol */
+  .timeline-h{ display:none; }
+  @media (min-width: 900px){
+    .timeline{ display:none; }
+    .timeline-h{
+      display:flex; position:relative; justify-content:space-between;
+      padding: 104px 4px 4px; border-top: 1px solid var(--line);
+    }
+    .tl-point{ position:relative; flex: 1 1 0; min-width: 90px; display:flex; flex-direction:column; align-items:center; }
+    .tl-dot{
+      width:13px; height:13px; margin-top:-7.5px; padding:0; border-radius:50%;
+      background: var(--bg); border: 2px solid var(--accent); cursor:pointer;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .tl-point:hover .tl-dot, .tl-point:focus-within .tl-dot, .tl-point.is-active .tl-dot{
+      background: var(--accent); transform: scale(1.4);
+    }
+    .tl-date-label{
+      margin-top:13px; font-family: var(--mono); font-size:11px; color: var(--ink-faint);
+      text-align:center; white-space:nowrap; transition: color .15s ease;
+    }
+    .tl-point:hover .tl-date-label, .tl-point:focus-within .tl-date-label, .tl-point.is-active .tl-date-label{
+      color: var(--accent);
+    }
+    .tl-card{
+      position:absolute; bottom: calc(100% + 16px); left:50%; width: 230px;
+      transform: translateX(-50%) translateY(6px);
+      padding: 16px 18px; text-align:left;
+      box-shadow: 0 16px 32px rgba(23,24,27,0.16);
+      opacity:0; pointer-events:none; transition: opacity .18s ease, transform .18s ease;
+      z-index: 5;
+    }
+    .tl-point:hover .tl-card, .tl-point:focus-within .tl-card, .tl-point.is-active .tl-card{
+      opacity:1; transform: translateX(-50%) translateY(0); pointer-events:auto;
+    }
+    .tl-point[data-align="left"] .tl-card{ left:0; transform: translateX(0) translateY(6px); }
+    .tl-point[data-align="left"]:hover .tl-card, .tl-point[data-align="left"]:focus-within .tl-card, .tl-point[data-align="left"].is-active .tl-card{ transform: translateX(0) translateY(0); }
+    .tl-point[data-align="right"] .tl-card{ left:auto; right:0; transform: translateX(0) translateY(6px); }
+    .tl-point[data-align="right"]:hover .tl-card, .tl-point[data-align="right"]:focus-within .tl-card, .tl-point[data-align="right"].is-active .tl-card{ transform: translateX(0) translateY(0); }
+    .tl-card-date{ font-family: var(--mono); font-size:11px; color: var(--accent); margin: 0 0 8px; }
+    .tl-card h3{ font-family: var(--disp); font-size: 0.95rem; font-weight:600; margin: 0 0 8px; color: var(--ink); }
+    .tl-card p{ font-size: 13px; color: var(--ink-soft); margin:0; line-height:1.5; }
+  }
+
+  .cv-panel{ display:grid; grid-template-columns: 280px 1fr; gap: 0; overflow:hidden; }
+  .cv-info{ padding: 30px 26px; border-right: 1px solid var(--line); display:flex; flex-direction:column; justify-content:center; }
+  .cv-filename{ font-family: var(--mono); font-size: 13px; color: var(--ink); margin: 0 0 14px; word-break: break-all; }
+  .cv-preview{
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(179,40,46,0.05) 0%, transparent 60%),
+      var(--line-soft);
+    min-height: 520px; display:flex; align-items:center; justify-content:center;
+    gap: 20px; padding: 30px; overflow-x: auto;
+  }
+  .cv-preview-status{ font-family: var(--mono); font-size: 12px; color: var(--ink-faint); }
+  .cv-page{
+    flex: none; background:#fff; border-radius: 3px; overflow:hidden; line-height:0;
+    box-shadow: 0 10px 26px rgba(23,24,27,0.14), 0 1px 0 rgba(0,0,0,0.03) inset;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .cv-page:hover{ transform: translateY(-3px); box-shadow: 0 16px 36px rgba(23,24,27,0.2); }
+  .cv-page{ border: none; padding: 0; cursor: zoom-in; font: inherit; -webkit-appearance: none; appearance: none; }
+  .cv-page canvas{ display:block; height: 460px; width:auto; max-width: none; }
+  @media (max-width: 760px){
+    .cv-panel{ grid-template-columns: 1fr; }
+    .cv-info{ border-right:none; border-bottom: 1px solid var(--line); }
+    .cv-preview{ padding: 22px 16px; }
+    .cv-page canvas{ height: 62vw; max-height: 460px; }
+  }
+
+  /* ---------- CV : aperçu en grand au clic ---------- */
+  .cv-modal{
+    position: fixed; inset: 0; z-index: 200;
+    display:flex; align-items:center; justify-content:center; padding: 60px 20px;
+    opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility 0s linear .25s;
+  }
+  .cv-modal.is-open{ opacity: 1; visibility: visible; transition: opacity .25s ease; }
+  .cv-modal-backdrop{ position:absolute; inset:0; background: rgba(23,24,27,0.72); }
+  .cv-modal-content{
+    position:relative; z-index:1; max-width: 92vw; max-height: 86vh; line-height:0;
+    background:#fff; border-radius: 4px; overflow:hidden;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+    transform: scale(0.94); transition: transform .25s ease;
+  }
+  .cv-modal.is-open .cv-modal-content{ transform: scale(1); }
+  .cv-modal-content canvas{ display:block; max-width: 100%; }
+  .cv-modal-close{
+    position: fixed; top: 22px; right: 26px; z-index: 2;
+    width: 38px; height: 38px; border-radius: 50%; border: none;
+    background: var(--bg-panel); color: var(--ink); font-size: 22px; line-height:1;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 6px 18px rgba(23,24,27,0.25);
+  }
+  .cv-modal-close:hover{ color: var(--accent); }
+
+  .perso-panel{ display:grid; grid-template-columns: 1fr 1fr; align-items: stretch; overflow:hidden; }
+  .perso-img{ width:100%; height:100%; min-height: 320px; object-fit: cover; display:block; filter: saturate(1.05) contrast(1.02); }
+  .perso-body{ padding: 36px 34px; display:flex; flex-direction:column; justify-content:center; }
+  .perso-eyebrow{ font-family: var(--mono); font-size: 12px; color: var(--accent); margin: 0 0 10px; }
+  .perso-body h3{ font-family: var(--disp); font-size: 1.4rem; font-weight: 600; margin: 0 0 14px; }
+  .perso-body p{ color: var(--ink-soft); font-size: 14.5px; max-width: 48ch; margin:0; }
+  @media (max-width: 760px){
+    .perso-panel{ grid-template-columns: 1fr; }
+    .perso-img{ min-height: 240px; }
+  }
+
+  .contact-panel{ display:grid; grid-template-columns: 1.2fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  @media (max-width: 760px){ .contact-panel{ grid-template-columns: 1fr; } }
+  .contact-main, .contact-side{ background: var(--bg-panel); padding: 34px; }
+  .contact-main p{ color: var(--ink-soft); max-width: 46ch; margin: 0 0 26px; }
+  .contact-side{ font-family: var(--mono); font-size: 13px; }
+  .contact-row{ padding: 12px 0; border-bottom: 1px dashed var(--line); display:flex; flex-direction:column; gap:4px; }
+  .contact-row:last-child{ border-bottom:none; }
+  .contact-row span:first-child{ color: var(--ink-faint); font-size: 11px; }
+  .contact-row a{ color: var(--ink); text-decoration:none; }
+  .contact-row a:hover{ color: var(--accent); }
+
+  footer{ padding: 26px 0 40px; font-family: var(--mono); font-size: 12px; color: var(--ink-faint); display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  /* ---------- traînée du curseur ---------- */
+  #cursor-trail{ position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+  @media (pointer: coarse){ #cursor-trail{ display:none; } }
+</style>
+</head>
+<body>
+
+<canvas id="cursor-trail" aria-hidden="true"></canvas>
+
+<div class="cv-modal" id="cv-modal" aria-hidden="true">
+  <div class="cv-modal-backdrop"></div>
+  <button type="button" class="cv-modal-close" id="cv-modal-close" aria-label="Fermer l'aperçu">×</button>
+  <div class="cv-modal-content">
+    <canvas id="cv-modal-canvas"></canvas>
+  </div>
+</div>
+
+<header>
+  <nav class="nav">
+    <a href="#top" class="nav-id"><span class="dot"></span>AKASCHE MAHINTAN</a>
+    <div class="nav-right">
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#competences" data-i18n="nav.competences">Compétences</a></li>
+        <li><a href="#projets" data-i18n="nav.projets">Projets</a></li>
+        <li><a href="#cv">CV</a></li>
+        <li><a href="#parcours" data-i18n="nav.parcours">Parcours</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch to English">EN</button>
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Ouvrir le menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero-scroll" id="hero-scroll">
+    <div class="hero-3d">
+      <div class="hero-photo" aria-hidden="true"></div>
+      <canvas id="webgl" aria-hidden="true"></canvas>
+      <div class="hero-vignette"></div>
+      <div class="hero-overlay wrap">
+        <div class="hero-scene hero-copy" data-scene="0">
+          <p class="kicker" data-i18n="hero.kicker">DÉVELOPPEUR WEB &amp; BLOCKCHAIN</p>
+          <h1 data-i18n="hero.h1">Je construis des produits web, IA et blockchain du prototype au déploiement.</h1>
+        </div>
+        <div class="hero-scene hero-copy" data-scene="1">
+          <p class="hero-lede" data-i18n="hero.lede">Étudiant en 3ᵉ année Ingénierie du Web et de la Blockchain à l'ESGI, je conçois et livre seul des SaaS, des outils d'automatisation et des agents IA — de l'idée jusqu'en production, pour des clients réels.</p>
+        </div>
+        <div class="hero-scene hero-copy" data-scene="2">
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="assets/cv-akasche-mahintan.pdf" download data-i18n="hero.cta.cv">Télécharger le CV</a>
+            <a class="btn btn-ghost" href="#projets" data-i18n="hero.cta.projects">Voir les projets</a>
+            <a class="btn btn-ghost" href="https://github.com/AkshiiGIT" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <div class="hero-stats" style="margin-top:40px;">
+            <div class="stat"><b>ESGI</b><span data-i18n="hero.stat1">WEB &amp; BLOCKCHAIN, 3E ANNÉE</span></div>
+            <div class="stat"><b>6+</b><span data-i18n="hero.stat2">PROJETS LIVRÉS OU ACTIFS</span></div>
+            <div class="stat"><b>FR·EN·TA</b><span data-i18n="hero.stat3">LANGUES PARLÉES</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-cue" id="scroll-cue"><i></i><span data-i18n="hero.scroll">DÉFILER</span></div>
+      <div class="hero-progress" id="hero-progress" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </section>
+
+  <section id="competences" class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="section-num" data-i18n="sec.competences.num">01 — STACK</p>
+        <h2 data-i18n="sec.competences.title">Compétences</h2>
+      </div>
+      <p class="section-note" data-i18n="sec.competences.note">Outils utilisés en production sur les projets ci-dessous, pas une liste de mots-clés.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h3>Frontend</h3>
+        <ul class="skill-list"><li>HTML / CSS / JS</li><li>PWA</li><li>Canvas API</li><li>A-Frame / WebGL</li><li>Responsive design</li></ul>
+      </div>
+      <div class="skill-card">
+        <h3>Backend</h3>
+        <ul class="skill-list"><li>PHP</li><li>PHPUnit / TDD</li><li>Python / Flask</li><li>Firebase Realtime DB</li><li>Composer / PSR-4</li></ul>
+      </div>
+      <div class="skill-card">
+        <h3 data-i18n="sec.competences.ai">IA &amp; Agents</h3>
+        <ul class="skill-list"><li>Gemini API</li><li>CrewAI</li><li>n8n</li><li>Prompt engineering</li><li data-i18n="sec.competences.agents">Agents autonomes</li></ul>
+      </div>
+      <div class="skill-card">
+        <h3>Data &amp; Scripts</h3>
+        <ul class="skill-list"><li>Selenium</li><li>yt-dlp</li><li>ReportLab</li><li>SheetJS</li><li>APIs REST (Dexscreener, GoPlus, Telegram)</li></ul>
+      </div>
+      <div class="skill-card">
+        <h3 data-i18n="sec.competences.deploy">Déploiement</h3>
+        <ul class="skill-list"><li>Git / GitHub</li><li>Vercel</li><li>GitHub Pages</li><li>XAMPP</li></ul>
+      </div>
+      <div class="skill-card">
+        <h3 data-i18n="sec.competences.langs">Langues</h3>
+        <ul class="skill-list"><li data-i18n="sec.competences.fr">Français — natif</li><li data-i18n="sec.competences.en">Anglais</li><li data-i18n="sec.competences.ta">Tamoul</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projets" class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="section-num" data-i18n="sec.projets.num">02 — RÉALISATIONS</p>
+        <h2 data-i18n="sec.projets.title">Projets</h2>
+      </div>
+      <p class="section-note" data-i18n="sec.projets.note">Six projets menés seul ou en petite équipe, du client réel au side-project technique.</p>
+    </div>
+
+    <div class="project tick">
+      <p class="project-index">01</p>
+      <div class="project-body">
+        <h3>Menu by Akshii (MenuAI Pro)</h3>
+        <p data-i18n="proj1.desc">SaaS qui génère un site de menu de restaurant à partir de photos, d'un QR code ou d'une URL, via l'API Gemini. Support bilingue FR/EN, publication directe sur GitHub Pages depuis le navigateur, installable en PWA.</p>
+        <ul class="project-tags"><li>Gemini API</li><li>JavaScript</li><li>PWA</li><li>GitHub API</li></ul>
+      </div>
+      <div class="project-meta">
+        <div class="status"><span class="led"></span><span data-i18n="proj1.status">En développement actif</span></div>
+        <span data-i18n="proj1.meta">App front monolithique, prompt engineering pour la fusion bilingue</span>
+      </div>
+    </div>
+
+    <div class="project tick">
+      <p class="project-index">02</p>
+      <div class="project-body">
+        <h3>MK Planning</h3>
+        <p data-i18n="proj2.desc">Application de gestion de planning employés développée pour MK MARKET. Calcul de paie par employé, vue calendrier mensuelle, export Excel, génération de plannings en PNG, portail employé avec connexion par code PIN.</p>
+        <ul class="project-tags"><li>JavaScript</li><li>Firebase</li><li>SheetJS</li><li>Canvas</li></ul>
+      </div>
+      <div class="project-meta">
+        <div class="status"><span class="led"></span><span data-i18n="proj2.status">Livré — client satisfait</span></div>
+        <a href="https://mk-planning.vercel.app" target="_blank" rel="noopener">mk-planning.vercel.app ↗</a>
+      </div>
+    </div>
+
+    <div class="project tick">
+      <p class="project-index">03</p>
+      <div class="project-body">
+        <h3 data-i18n="proj3.title">Marketplace d'agents IA</h3>
+        <p data-i18n="proj3.desc">Marketplace d'agents IA pour e-commerçants, avec en produit prioritaire un agent d'automatisation de contenu TikTok. Orchestration multi-agents et intégration de workflows d'automatisation.</p>
+        <ul class="project-tags"><li>CrewAI</li><li>n8n</li><li>Gemini API</li></ul>
+      </div>
+      <div class="project-meta">
+        <div class="status"><span class="led"></span><span data-i18n="proj3.status">En construction</span></div>
+        <span data-i18n="proj3.meta">Tarification cible 99–199€/mois par client</span>
+      </div>
+    </div>
+
+    <div class="project tick">
+      <p class="project-index">04</p>
+      <div class="project-body">
+        <h3 data-i18n="proj4.title">Système d'analyse crypto</h3>
+        <p data-i18n="proj4.desc">Bot Telegram qui surveille de nouveaux contrats de tokens en temps réel et pousse une notification avec un score de risque sur 10, à partir de signaux GoPlus Security (honeypot, ownership, LP lock, concentration des holders) plutôt que d'attendre une adresse officielle.</p>
+        <ul class="project-tags"><li>Python</li><li>Dexscreener API</li><li>GoPlus API</li><li>Telegram Bot API</li></ul>
+      </div>
+      <div class="project-meta">
+        <div class="status"><span class="led"></span><span data-i18n="proj4.status">Fonctionnel</span></div>
+        <span data-i18n="proj4.meta">Détection de clones de tokens sur Base</span>
+      </div>
+    </div>
+
+    <div class="project tick">
+      <p class="project-index">05</p>
+      <div class="project-body">
+        <h3>PRISM ImmaTech</h3>
+        <p data-i18n="proj5.desc">Présentation web immersive pour un projet de réalité augmentée à l'IPSSI : particules WebGL, navigation en scroll-snap et animations CSS avancées sur une identité de marque A-Frame.</p>
+        <ul class="project-tags"><li>A-Frame</li><li>WebGL</li><li data-i18n="proj5.tag">CSS avancé</li></ul>
+      </div>
+      <div class="project-meta">
+        <div class="status paused"><span class="led"></span><span data-i18n="proj5.status">Projet scolaire</span></div>
+        <span data-i18n="proj5.meta">IPSSI — réalité augmentée</span>
+      </div>
+    </div>
+
+    <div class="project tick">
+      <p class="project-index">06</p>
+      <div class="project-body">
+        <h3 data-i18n="proj6.title">Passerelle Einthusan → Infuse</h3>
+        <p data-i18n="proj6.desc">Serveur Flask local qui interroge le catalogue Einthusan, résout les flux vidéo à la demande via yt-dlp, et les sert à Infuse sur Apple TV en WebDAV. Résolution d'URL dynamique et authentification par cookies avec Selenium headless.</p>
+        <ul class="project-tags"><li>Python</li><li>Flask</li><li>Selenium</li><li>yt-dlp</li></ul>
+      </div>
+      <div class="project-meta">
+        <div class="status paused"><span class="led"></span><span data-i18n="proj6.status">Outil personnel</span></div>
+        <span>WebDAV + proxy m3u8</span>
+      </div>
+    </div>
+
+  </section>
+
+  <section id="cv" class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="section-num" data-i18n="sec.cv.num">03 — DOCUMENT</p>
+        <h2>CV</h2>
+      </div>
+      <p class="section-note" data-i18n="sec.cv.note">Version à jour, consultable ici ou en téléchargement.</p>
+    </div>
+    <div class="cv-panel tick">
+      <div class="cv-info">
+        <p class="cv-filename">cv-akasche-mahintan.pdf</p>
+        <ul class="project-tags"><li>PDF</li><li data-i18n="cv.pages">2 pages</li><li>FR</li></ul>
+        <div class="hero-actions" style="margin-top:22px;">
+          <a class="btn btn-primary" href="assets/cv-akasche-mahintan.pdf" download data-i18n="cv.download">Télécharger</a>
+          <a class="btn btn-ghost" href="assets/cv-akasche-mahintan.pdf" target="_blank" rel="noopener" data-i18n="cv.open">Ouvrir dans un nouvel onglet</a>
+        </div>
+      </div>
+      <div class="cv-preview" id="cv-preview">
+        <p class="cv-preview-status" id="cv-preview-status" data-i18n="cv.loading">Chargement de l'aperçu…</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="perso" class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="section-num" data-i18n="sec.perso.num">04 — À CÔTÉ DU CLAVIER</p>
+        <h2 data-i18n="sec.perso.title">Hors du code</h2>
+      </div>
+    </div>
+    <div class="perso-panel tick">
+      <img class="perso-img" src="assets/e30-m3.webp" alt="BMW E30 M3 rouge sur une route de montagne, entourée de forêts et de sommets." loading="lazy" data-i18n-attr="alt" data-i18n="perso.alt">
+      <div class="perso-body">
+        <p class="perso-eyebrow" data-i18n="perso.eyebrow">FOND D'ÉCRAN DU MOMENT</p>
+        <h3>BMW E30 M3</h3>
+        <p data-i18n="perso.text">C'est une passion qui remonte à l'enfance, transmise par mon père — du genre à changer de voiture comme de veste. J'ai grandi à regarder des fiches techniques de voitures allemandes des années 80-90 plutôt que des dessins animés. La E30 M3 — châssis S14, la première M3 — tourne en fond d'écran depuis un moment ; difficile de faire plus honnête sur le mélange de mécanique et de précision qui me plaît, en voiture comme en code.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="parcours" class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="section-num" data-i18n="sec.parcours.num">05 — CHRONOLOGIE</p>
+        <h2 data-i18n="sec.parcours.title">Parcours</h2>
+      </div>
+      <p class="section-note" data-i18n="sec.parcours.note">Formation et expérience terrain, dans l'ordre.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <p class="tl-date" data-i18n="tl1.date">LYCÉE — 2022</p>
+        <h3 data-i18n="tl1.title">Lycée Pierre Mendès France, Savigny-le-Temple</h3>
+        <p data-i18n="tl1.text">Baccalauréat obtenu en 2022.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-date" data-i18n="tl2.date">LICENCE — 2022-2024</p>
+        <h3 data-i18n="tl2.title">Licence Biochimie — Accès Santé</h3>
+        <p data-i18n="tl2.text">Deux ans de licence scientifique avant de bifurquer vers le développement web.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-date">IPSSI — 2024-2026</p>
+        <h3>Network Development &amp; Cybersecurity</h3>
+        <p data-i18n="tl3.text">Projets PHP/TDD (Hangman en PHPUnit, exercices PSR-4), et la présentation AR PRISM ImmaTech.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-date" data-i18n="tl4.date">STAGE — BSE</p>
+        <h3 data-i18n="tl4.title">3 mois de stage terrain</h3>
+        <p data-i18n="tl4.text">Réparation PC et imprimantes, gestion des commandes, livraison, installation et gestion de serveurs.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-date">ESGI — 2026/2027</p>
+        <h3 data-i18n="tl5.title">Bachelor Ingénierie du Web et de la Blockchain</h3>
+        <p data-i18n="tl5.text">Développement en parallèle de produits indépendants : SaaS, outils d'automatisation IA et systèmes crypto.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-date" data-i18n="tl6.date">AUJOURD'HUI</p>
+        <h3 data-i18n="tl6.title">À la recherche d'une alternance</h3>
+        <p data-i18n="tl6.text">Ouvert à une alternance ou une mission freelance en développement web, IA ou blockchain.</p>
+      </div>
+    </div>
+
+    <div class="timeline-h" id="timeline-h">
+      <div class="tl-point" data-align="left">
+        <button class="tl-dot" type="button" aria-expanded="false" aria-controls="tl-card-1"><span class="sr-only">Voir le détail — Lycée</span></button>
+        <span class="tl-date-label" data-i18n="tl1.date">LYCÉE — 2022</span>
+        <div class="tl-card tick" id="tl-card-1">
+          <p class="tl-card-date" data-i18n="tl1.date">LYCÉE — 2022</p>
+          <h3 data-i18n="tl1.title">Lycée Pierre Mendès France, Savigny-le-Temple</h3>
+          <p data-i18n="tl1.text">Baccalauréat obtenu en 2022.</p>
+        </div>
+      </div>
+      <div class="tl-point">
+        <button class="tl-dot" type="button" aria-expanded="false" aria-controls="tl-card-2"><span class="sr-only">Voir le détail — Licence Biochimie</span></button>
+        <span class="tl-date-label" data-i18n="tl2.short">LICENCE — 22-24</span>
+        <div class="tl-card tick" id="tl-card-2">
+          <p class="tl-card-date" data-i18n="tl2.date">LICENCE — 2022-2024</p>
+          <h3 data-i18n="tl2.title">Licence Biochimie — Accès Santé</h3>
+          <p data-i18n="tl2.text">Deux ans de licence scientifique avant de bifurquer vers le développement web.</p>
+        </div>
+      </div>
+      <div class="tl-point">
+        <button class="tl-dot" type="button" aria-expanded="false" aria-controls="tl-card-3"><span class="sr-only">Voir le détail — IPSSI</span></button>
+        <span class="tl-date-label">IPSSI — 24-26</span>
+        <div class="tl-card tick" id="tl-card-3">
+          <p class="tl-card-date">IPSSI — 2024-2026</p>
+          <h3>Network Development &amp; Cybersecurity</h3>
+          <p data-i18n="tl3.text">Projets PHP/TDD (Hangman en PHPUnit, exercices PSR-4), et la présentation AR PRISM ImmaTech.</p>
+        </div>
+      </div>
+      <div class="tl-point">
+        <button class="tl-dot" type="button" aria-expanded="false" aria-controls="tl-card-4"><span class="sr-only">Voir le détail — Stage BSE</span></button>
+        <span class="tl-date-label" data-i18n="tl4.date">STAGE — BSE</span>
+        <div class="tl-card tick" id="tl-card-4">
+          <p class="tl-card-date" data-i18n="tl4.date">STAGE — BSE</p>
+          <h3 data-i18n="tl4.title">3 mois de stage terrain</h3>
+          <p data-i18n="tl4.text">Réparation PC et imprimantes, gestion des commandes, livraison, installation et gestion de serveurs.</p>
+        </div>
+      </div>
+      <div class="tl-point">
+        <button class="tl-dot" type="button" aria-expanded="false" aria-controls="tl-card-5"><span class="sr-only">Voir le détail — ESGI</span></button>
+        <span class="tl-date-label">ESGI — 26/27</span>
+        <div class="tl-card tick" id="tl-card-5">
+          <p class="tl-card-date">ESGI — 2026/2027</p>
+          <h3 data-i18n="tl5.title">Bachelor Ingénierie du Web et de la Blockchain</h3>
+          <p data-i18n="tl5.text">Développement en parallèle de produits indépendants : SaaS, outils d'automatisation IA et systèmes crypto.</p>
+        </div>
+      </div>
+      <div class="tl-point" data-align="right">
+        <button class="tl-dot" type="button" aria-expanded="false" aria-controls="tl-card-6"><span class="sr-only">Voir le détail — Aujourd'hui</span></button>
+        <span class="tl-date-label" data-i18n="tl6.date">AUJOURD'HUI</span>
+        <div class="tl-card tick" id="tl-card-6">
+          <p class="tl-card-date" data-i18n="tl6.date">AUJOURD'HUI</p>
+          <h3 data-i18n="tl6.title">À la recherche d'une alternance</h3>
+          <p data-i18n="tl6.text">Ouvert à une alternance ou une mission freelance en développement web, IA ou blockchain.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="wrap" style="border-bottom:none;">
+    <div class="section-head">
+      <div>
+        <p class="section-num" data-i18n="sec.contact.num">06 — CONTACT</p>
+        <h2 data-i18n="sec.contact.title">Travaillons ensemble</h2>
+      </div>
+    </div>
+    <div class="contact-panel">
+      <div class="contact-main">
+        <h2 style="font-family:var(--disp); font-size:1.4rem; margin-bottom:14px;" data-i18n="contact.h2">Une idée à construire ?</h2>
+        <p data-i18n="contact.p">En recherche d'alternance (octobre 2026 – août 2027) et ouvert aux missions freelance sur des projets web, IA ou blockchain. Le plus simple : un mail.</p>
+        <a class="btn btn-primary" href="mailto:akasche.pro@gmail.com">akasche.pro@gmail.com</a>
+      </div>
+      <div class="contact-side">
+        <div class="contact-row"><span>EMAIL</span><a href="mailto:akasche.pro@gmail.com">akasche.pro@gmail.com</a></div>
+        <div class="contact-row"><span>GITHUB</span><a href="https://github.com/AkshiiGIT" target="_blank" rel="noopener">github.com/AkshiiGIT</a></div>
+        <div class="contact-row"><span>LINKEDIN</span><a href="https://linkedin.com/in/akasche-mahintan" target="_blank" rel="noopener">in/akasche-mahintan</a></div>
+        <div class="contact-row"><span data-i18n="contact.education">FORMATION</span><span style="color:var(--ink-soft)">ESGI — Web &amp; Blockchain</span></div>
+        <div class="contact-row"><span data-i18n="contact.availability">DISPONIBILITÉ</span><span style="color:var(--ink-soft)" data-i18n="contact.availability.value">Alternance / Freelance</span></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>© <span id="year"></span> Akasche Mahintan</span>
+  <span data-i18n="footer.note">Three.js hero — HTML, CSS, JS, sans framework de build</span>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+<script>
+  // ---------- FR / EN ----------
+  window.i18n = {
+    fr: {
+      "nav.competences": "Compétences", "nav.projets": "Projets", "nav.parcours": "Parcours",
+      "hero.kicker": "DÉVELOPPEUR WEB & BLOCKCHAIN",
+      "hero.h1": "Je construis des produits web, IA et blockchain du prototype au déploiement.",
+      "hero.lede": "Étudiant en 3ᵉ année Ingénierie du Web et de la Blockchain à l'ESGI, je conçois et livre seul des SaaS, des outils d'automatisation et des agents IA — de l'idée jusqu'en production, pour des clients réels.",
+      "hero.cta.cv": "Télécharger le CV", "hero.cta.projects": "Voir les projets",
+      "hero.stat1": "WEB & BLOCKCHAIN, 3E ANNÉE", "hero.stat2": "PROJETS LIVRÉS OU ACTIFS", "hero.stat3": "LANGUES PARLÉES",
+      "hero.scroll": "DÉFILER",
+      "sec.competences.num": "01 — STACK", "sec.competences.title": "Compétences",
+      "sec.competences.note": "Outils utilisés en production sur les projets ci-dessous, pas une liste de mots-clés.",
+      "sec.competences.ai": "IA & Agents", "sec.competences.agents": "Agents autonomes",
+      "sec.competences.deploy": "Déploiement", "sec.competences.langs": "Langues",
+      "sec.competences.fr": "Français — natif", "sec.competences.en": "Anglais", "sec.competences.ta": "Tamoul",
+      "sec.projets.num": "02 — RÉALISATIONS", "sec.projets.title": "Projets",
+      "sec.projets.note": "Six projets menés seul ou en petite équipe, du client réel au side-project technique.",
+      "proj1.desc": "SaaS qui génère un site de menu de restaurant à partir de photos, d'un QR code ou d'une URL, via l'API Gemini. Support bilingue FR/EN, publication directe sur GitHub Pages depuis le navigateur, installable en PWA.",
+      "proj1.status": "En développement actif", "proj1.meta": "App front monolithique, prompt engineering pour la fusion bilingue",
+      "proj2.desc": "Application de gestion de planning employés développée pour MK MARKET. Calcul de paie par employé, vue calendrier mensuelle, export Excel, génération de plannings en PNG, portail employé avec connexion par code PIN.",
+      "proj2.status": "Livré — client satisfait",
+      "proj3.title": "Marketplace d'agents IA",
+      "proj3.desc": "Marketplace d'agents IA pour e-commerçants, avec en produit prioritaire un agent d'automatisation de contenu TikTok. Orchestration multi-agents et intégration de workflows d'automatisation.",
+      "proj3.status": "En construction", "proj3.meta": "Tarification cible 99–199€/mois par client",
+      "proj4.title": "Système d'analyse crypto",
+      "proj4.desc": "Bot Telegram qui surveille de nouveaux contrats de tokens en temps réel et pousse une notification avec un score de risque sur 10, à partir de signaux GoPlus Security (honeypot, ownership, LP lock, concentration des holders) plutôt que d'attendre une adresse officielle.",
+      "proj4.status": "Fonctionnel", "proj4.meta": "Détection de clones de tokens sur Base",
+      "proj5.desc": "Présentation web immersive pour un projet de réalité augmentée à l'IPSSI : particules WebGL, navigation en scroll-snap et animations CSS avancées sur une identité de marque A-Frame.",
+      "proj5.tag": "CSS avancé", "proj5.status": "Projet scolaire", "proj5.meta": "IPSSI — réalité augmentée",
+      "proj6.title": "Passerelle Einthusan → Infuse",
+      "proj6.desc": "Serveur Flask local qui interroge le catalogue Einthusan, résout les flux vidéo à la demande via yt-dlp, et les sert à Infuse sur Apple TV en WebDAV. Résolution d'URL dynamique et authentification par cookies avec Selenium headless.",
+      "proj6.status": "Outil personnel",
+      "sec.cv.num": "03 — DOCUMENT", "sec.cv.note": "Version à jour, consultable ici ou en téléchargement.",
+      "cv.pages": "2 pages", "cv.download": "Télécharger", "cv.open": "Ouvrir dans un nouvel onglet", "cv.loading": "Chargement de l'aperçu…",
+      "sec.perso.num": "04 — À CÔTÉ DU CLAVIER", "sec.perso.title": "Hors du code",
+      "perso.alt": "BMW E30 M3 rouge sur une route de montagne, entourée de forêts et de sommets.",
+      "perso.eyebrow": "FOND D'ÉCRAN DU MOMENT",
+      "perso.text": "C'est une passion qui remonte à l'enfance, transmise par mon père — du genre à changer de voiture comme de veste. J'ai grandi à regarder des fiches techniques de voitures allemandes des années 80-90 plutôt que des dessins animés. La E30 M3 — châssis S14, la première M3 — tourne en fond d'écran depuis un moment ; difficile de faire plus honnête sur le mélange de mécanique et de précision qui me plaît, en voiture comme en code.",
+      "sec.parcours.num": "05 — CHRONOLOGIE", "sec.parcours.title": "Parcours",
+      "sec.parcours.note": "Formation et expérience terrain, dans l'ordre.",
+      "tl1.date": "LYCÉE — 2022", "tl1.title": "Lycée Pierre Mendès France, Savigny-le-Temple", "tl1.text": "Baccalauréat obtenu en 2022.",
+      "tl2.date": "LICENCE — 2022-2024", "tl2.short": "LICENCE — 22-24", "tl2.title": "Licence Biochimie — Accès Santé",
+      "tl2.text": "Deux ans de licence scientifique avant de bifurquer vers le développement web.",
+      "tl3.text": "Projets PHP/TDD (Hangman en PHPUnit, exercices PSR-4), et la présentation AR PRISM ImmaTech.",
+      "tl4.date": "STAGE — BSE", "tl4.title": "3 mois de stage terrain",
+      "tl4.text": "Réparation PC et imprimantes, gestion des commandes, livraison, installation et gestion de serveurs.",
+      "tl5.title": "Bachelor Ingénierie du Web et de la Blockchain",
+      "tl5.text": "Développement en parallèle de produits indépendants : SaaS, outils d'automatisation IA et systèmes crypto.",
+      "tl6.date": "AUJOURD'HUI", "tl6.title": "À la recherche d'une alternance",
+      "tl6.text": "Ouvert à une alternance ou une mission freelance en développement web, IA ou blockchain.",
+      "sec.contact.num": "06 — CONTACT", "sec.contact.title": "Travaillons ensemble",
+      "contact.h2": "Une idée à construire ?",
+      "contact.p": "En recherche d'alternance (octobre 2026 – août 2027) et ouvert aux missions freelance sur des projets web, IA ou blockchain. Le plus simple : un mail.",
+      "contact.education": "FORMATION", "contact.availability": "DISPONIBILITÉ", "contact.availability.value": "Alternance / Freelance",
+      "footer.note": "Three.js hero — HTML, CSS, JS, sans framework de build"
+    },
+    en: {
+      "nav.competences": "Skills", "nav.projets": "Projects", "nav.parcours": "Journey",
+      "hero.kicker": "WEB & BLOCKCHAIN DEVELOPER",
+      "hero.h1": "I build web, AI and blockchain products from prototype to deployment.",
+      "hero.lede": "3rd-year Web & Blockchain Engineering student at ESGI, I design and ship SaaS products, automation tools and AI agents on my own — from idea to production, for real clients.",
+      "hero.cta.cv": "Download CV", "hero.cta.projects": "See projects",
+      "hero.stat1": "WEB & BLOCKCHAIN, YEAR 3", "hero.stat2": "SHIPPED OR ACTIVE PROJECTS", "hero.stat3": "LANGUAGES SPOKEN",
+      "hero.scroll": "SCROLL",
+      "sec.competences.num": "01 — STACK", "sec.competences.title": "Skills",
+      "sec.competences.note": "Tools used in production on the projects below — not a buzzword list.",
+      "sec.competences.ai": "AI & Agents", "sec.competences.agents": "Autonomous agents",
+      "sec.competences.deploy": "Deployment", "sec.competences.langs": "Languages",
+      "sec.competences.fr": "French — native", "sec.competences.en": "English", "sec.competences.ta": "Tamil",
+      "sec.projets.num": "02 — WORK", "sec.projets.title": "Projects",
+      "sec.projets.note": "Six projects, solo or in a small team, from real clients to technical side projects.",
+      "proj1.desc": "A SaaS that generates a restaurant menu website from photos, a QR code, or a URL, via the Gemini API. Bilingual FR/EN support, one-click publishing to GitHub Pages straight from the browser, installable as a PWA.",
+      "proj1.status": "Actively in development", "proj1.meta": "Monolithic front-end app, prompt engineering for the bilingual merge",
+      "proj2.desc": "Employee scheduling app built for MK MARKET. Per-employee payroll calculation, monthly calendar view, Excel export, PNG schedule generation, and an employee portal with PIN-code login.",
+      "proj2.status": "Shipped — client satisfied",
+      "proj3.title": "AI Agent Marketplace",
+      "proj3.desc": "An AI agent marketplace for e-commerce sellers, led by a TikTok content-automation agent as the flagship product. Multi-agent orchestration and automation workflow integrations.",
+      "proj3.status": "In progress", "proj3.meta": "Target pricing: €99–199/month per client",
+      "proj4.title": "Crypto Analysis System",
+      "proj4.desc": "A Telegram bot that watches new token contracts in real time and pushes a risk score out of 10, based on GoPlus Security signals (honeypot, ownership, LP lock, holder concentration) — instead of waiting for an official announcement.",
+      "proj4.status": "Working", "proj4.meta": "Detects token clones on Base",
+      "proj5.desc": "Immersive web presentation for an augmented-reality project at IPSSI: WebGL particles, scroll-snap navigation, and advanced CSS animations built around an A-Frame brand identity.",
+      "proj5.tag": "Advanced CSS", "proj5.status": "School project", "proj5.meta": "IPSSI — augmented reality",
+      "proj6.title": "Einthusan → Infuse Gateway",
+      "proj6.desc": "A local Flask server that queries the Einthusan catalog, resolves video streams on demand via yt-dlp, and serves them to Infuse on Apple TV over WebDAV. Dynamic URL resolution and cookie authentication with headless Selenium.",
+      "proj6.status": "Personal tool",
+      "sec.cv.num": "03 — DOCUMENT", "sec.cv.note": "Up to date, viewable here or downloadable.",
+      "cv.pages": "2 pages", "cv.download": "Download", "cv.open": "Open in new tab", "cv.loading": "Loading preview…",
+      "sec.perso.num": "04 — AWAY FROM THE KEYBOARD", "sec.perso.title": "Outside the code",
+      "perso.alt": "Red BMW E30 M3 on a mountain road, surrounded by forests and peaks.",
+      "perso.eyebrow": "CURRENT WALLPAPER",
+      "perso.text": "It's a passion going back to childhood, passed down by my father — the kind of guy who changes cars like he changes jackets. I grew up reading spec sheets for 80s-90s German cars instead of watching cartoons. The E30 M3 — chassis S14, the original M3 — has been my wallpaper for a while now; hard to find a more honest mix of mechanics and precision, in cars as in code.",
+      "sec.parcours.num": "05 — TIMELINE", "sec.parcours.title": "Journey",
+      "sec.parcours.note": "Education and hands-on experience, in order.",
+      "tl1.date": "HIGH SCHOOL — 2022", "tl1.title": "Pierre Mendès France High School, Savigny-le-Temple", "tl1.text": "Graduated (Baccalauréat) in 2022.",
+      "tl2.date": "BACHELOR'S — 2022-2024", "tl2.short": "BACHELOR'S — 22-24", "tl2.title": "Biochemistry Degree — Pre-med Track",
+      "tl2.text": "Two years of a science degree before pivoting to web development.",
+      "tl3.text": "PHP/TDD projects (a Hangman game in PHPUnit, PSR-4 exercises), and the PRISM ImmaTech AR presentation.",
+      "tl4.date": "INTERNSHIP — BSE", "tl4.title": "3-month field internship",
+      "tl4.text": "PC and printer repairs, order management, delivery, server installation and administration.",
+      "tl5.title": "Bachelor's in Web & Blockchain Engineering",
+      "tl5.text": "Building independent products on the side: SaaS, AI automation tools, and crypto systems.",
+      "tl6.date": "TODAY", "tl6.title": "Looking for a work-study placement",
+      "tl6.text": "Open to a work-study (alternance) role or freelance work in web, AI, or blockchain development.",
+      "sec.contact.num": "06 — CONTACT", "sec.contact.title": "Let's work together",
+      "contact.h2": "Got an idea to build?",
+      "contact.p": "Looking for a work-study placement (October 2026 – August 2027) and open to freelance work on web, AI, or blockchain projects. Easiest way to reach me: email.",
+      "contact.education": "EDUCATION", "contact.availability": "AVAILABILITY", "contact.availability.value": "Work-study / Freelance",
+      "footer.note": "Three.js hero — HTML, CSS, JS, no build framework"
+    }
+  };
+
+  window.i18nMeta = {
+    fr: { title: "Akasche Mahintan — Développeur Web & Blockchain", desc: "Portfolio d'Akasche Mahintan — développeur full-stack, produits IA et blockchain, du prototype au déploiement.", navLabel: "Ouvrir le menu", closeLabel: "Fermer l'aperçu", enlargeLabel: "Agrandir la page {n} du CV" },
+    en: { title: "Akasche Mahintan — Web & Blockchain Developer", desc: "Akasche Mahintan's portfolio — full-stack developer, AI and blockchain products, from prototype to deployment.", navLabel: "Open menu", closeLabel: "Close preview", enlargeLabel: "Enlarge CV page {n}" }
+  };
+
+  window.currentLang = 'fr';
+
+  function applyLang(lang) {
+    if (!window.i18n[lang]) return;
+    window.currentLang = lang;
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const key = el.getAttribute('data-i18n');
+      const value = window.i18n[lang][key];
+      if (value === undefined) return;
+      const attr = el.getAttribute('data-i18n-attr');
+      if (attr) el.setAttribute(attr, value);
+      else el.textContent = value;
+    });
+
+    const meta = window.i18nMeta[lang];
+    document.title = meta.title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', meta.desc);
+    const navToggle = document.getElementById('nav-toggle');
+    if (navToggle) navToggle.setAttribute('aria-label', meta.navLabel);
+    const modalClose = document.getElementById('cv-modal-close');
+    if (modalClose) modalClose.setAttribute('aria-label', meta.closeLabel);
+    document.querySelectorAll('.cv-page[data-page-num]').forEach((btn) => {
+      btn.setAttribute('aria-label', meta.enlargeLabel.replace('{n}', btn.dataset.pageNum));
+    });
+
+    const langBtn = document.getElementById('lang-toggle');
+    if (langBtn) {
+      langBtn.textContent = lang === 'fr' ? 'EN' : 'FR';
+      langBtn.setAttribute('aria-label', lang === 'fr' ? 'Switch to English' : 'Passer en français');
+    }
+
+    try { localStorage.setItem('site-lang', lang); } catch (e) {}
+  }
+  window.applyLang = applyLang;
+
+  let savedLang = 'fr';
+  try { savedLang = localStorage.getItem('site-lang') || 'fr'; } catch (e) {}
+  applyLang(savedLang);
+
+  const langToggleBtn = document.getElementById('lang-toggle');
+  if (langToggleBtn) {
+    langToggleBtn.addEventListener('click', () => {
+      applyLang(window.currentLang === 'fr' ? 'en' : 'fr');
+    });
+  }
+</script>
+
+<script>
+  // ---------- frise chronologique : tap tactile (le survol n'existe pas au doigt) ----------
+  (function () {
+    const points = document.querySelectorAll('#timeline-h .tl-point');
+    if (!points.length) return;
+    function closeAll() {
+      points.forEach((p) => {
+        p.classList.remove('is-active');
+        const dot = p.querySelector('.tl-dot');
+        if (dot) dot.setAttribute('aria-expanded', 'false');
+      });
+    }
+    points.forEach((point) => {
+      const dot = point.querySelector('.tl-dot');
+      if (!dot) return;
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wasActive = point.classList.contains('is-active');
+        closeAll();
+        if (!wasActive) {
+          point.classList.add('is-active');
+          dot.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+    document.addEventListener('click', closeAll);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+  })();
+</script>
+
+<script>
+  // ---------- scrollytelling du hero : la voiture reste fixe, les 3 scènes se relaient ----------
+  (function () {
+    const wrapper = document.getElementById('hero-scroll');
+    const pin = wrapper ? wrapper.querySelector('.hero-3d') : null;
+    const scenes = wrapper ? Array.from(wrapper.querySelectorAll('.hero-scene')) : [];
+    const scrollCue = document.getElementById('scroll-cue');
+    const progressDots = document.querySelectorAll('#hero-progress span');
+    if (!wrapper || !pin || !scenes.length) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      // pas de scroll-jack pour qui préfère moins d'animation : les 3 scènes s'empilent normalement
+      return;
+    }
+
+    wrapper.classList.add('js-scenes');
+    const N = scenes.length;
+    const FADE = 0.22; // portion de chaque segment consacrée au fondu d'entrée/sortie
+
+    // valeurs mises en cache : lire offsetHeight/getComputedStyle à chaque frame de scroll
+    // force le navigateur à recalculer toute la mise en page — sur mobile, ça suffit à
+    // rendre l'animation saccadée. On ne les relit qu'au chargement et au resize.
+    let headerH = 0;
+    let scrollableHeight = 0;
+    const prevActive = new Array(N).fill(-1);
+
+    function measure() {
+      headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      const pinH = pin.getBoundingClientRect().height;
+      wrapper.style.height = (pinH * N) + 'px';
+      scrollableHeight = (pinH * N) - pinH;
+    }
+
+    function progressValue() {
+      if (scrollableHeight <= 0) return 0;
+      const scrolled = headerH - wrapper.getBoundingClientRect().top;
+      return Math.min(Math.max(scrolled / scrollableHeight, 0), 1);
+    }
+
+    let ticking = false;
+    function update() {
+      ticking = false;
+      const progress = progressValue();
+
+      scenes.forEach((scene, i) => {
+        const segLen = 1 / N;
+        const s = i * segLen, e = s + segLen;
+        const fadeLen = FADE * segLen;
+        let opacity = 1, ty = 0;
+
+        if (i > 0 && progress < s + fadeLen) {
+          const t = Math.max(0, (progress - s) / fadeLen);
+          opacity = t; ty = 28 * (1 - t);
+        } else if (i < N - 1 && progress > e - fadeLen) {
+          const t = Math.max(0, (progress - (e - fadeLen)) / fadeLen);
+          opacity = 1 - t; ty = -t * 28;
+        } else if (progress < s) {
+          opacity = 0; ty = 28;
+        } else if (progress > e) {
+          opacity = 0; ty = -28;
+        }
+
+        scene.style.opacity = String(opacity);
+        scene.style.transform = `translate3d(0, ${ty}px, 0)`;
+        const active = opacity > 0.5 ? 1 : 0;
+        if (prevActive[i] !== active) {
+          prevActive[i] = active;
+          scene.classList.toggle('is-active', !!active);
+          scene.setAttribute('aria-hidden', active ? 'false' : 'true');
+        }
+      });
+
+      if (progressDots.length) {
+        const activeIdx = Math.min(N - 1, Math.floor(progress * N));
+        progressDots.forEach((d, i) => d.classList.toggle('is-on', i === activeIdx));
+      }
+      if (scrollCue) scrollCue.style.opacity = progress > 0.04 ? '0' : '1';
+    }
+
+    function onScroll() {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }
+    function onResize() { measure(); update(); }
+
+    measure();
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+  })();
+</script>
+
+<script>
+  // ---------- menu mobile ----------
+  (function () {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    function close() {
+      links.classList.remove('is-open');
+      toggle.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+    toggle.addEventListener('click', () => {
+      const open = links.classList.toggle('is-open');
+      toggle.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+    window.addEventListener('resize', () => { if (window.innerWidth > 720) close(); });
+  })();
+</script>
+
+<script>
+  // ---------- traînée du curseur ----------
+  (function () {
+    const canvas = document.getElementById('cursor-trail');
+    if (!canvas) return;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!finePointer || reduceMotion) { canvas.remove(); return; }
+
+    const ctx = canvas.getContext('2d');
+    let w, h, dpr;
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth; h = window.innerHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const points = [];
+    const MAX_AGE = 26;
+    let lastX = null, lastY = null;
+    let active = false;
+
+    window.addEventListener('pointermove', (e) => {
+      active = true;
+      if (lastX !== null) {
+        // interpole entre les positions pour un trait continu même en mouvement rapide
+        const dx = e.clientX - lastX, dy = e.clientY - lastY;
+        const dist = Math.hypot(dx, dy);
+        const steps = Math.min(Math.max(Math.floor(dist / 6), 1), 6);
+        for (let i = 1; i <= steps; i++) {
+          points.push({ x: lastX + (dx * i) / steps, y: lastY + (dy * i) / steps, age: 0 });
+        }
+      } else {
+        points.push({ x: e.clientX, y: e.clientY, age: 0 });
+      }
+      lastX = e.clientX; lastY = e.clientY;
+      if (points.length > 220) points.splice(0, points.length - 220);
+    }, { passive: true });
+
+    window.addEventListener('pointerleave', () => { active = false; lastX = null; lastY = null; });
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = points.length - 1; i >= 0; i--) {
+        const p = points[i];
+        const t = p.age / MAX_AGE;
+        if (t >= 1) { points.splice(i, 1); continue; }
+        const alpha = (1 - t) * 0.55;
+        const radius = 1.5 + (1 - t) * 7;
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
+        grad.addColorStop(0, `rgba(179,40,46,${alpha})`);
+        grad.addColorStop(1, 'rgba(179,40,46,0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        p.age++;
+      }
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+(async function renderCV() {
+  const CV_URL = 'assets/cv-akasche-mahintan.pdf';
+  const container = document.getElementById('cv-preview');
+  const modal = document.getElementById('cv-modal');
+  const modalCanvas = document.getElementById('cv-modal-canvas');
+  const modalClose = document.getElementById('cv-modal-close');
+  let pdfDoc = null;
+
+  function fallbackToIframe() {
+    container.innerHTML = '';
+    const iframe = document.createElement('iframe');
+    iframe.src = CV_URL;
+    iframe.title = "Aperçu du CV d'Akasche Mahintan";
+    iframe.loading = 'lazy';
+    iframe.style.cssText = 'width:100%;height:100%;min-height:520px;border:none;display:block;';
+    container.style.padding = '0';
+    container.appendChild(iframe);
+  }
+
+  function openModal() {
+    if (!modal) return;
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  if (modal) {
+    modal.querySelector('.cv-modal-backdrop').addEventListener('click', closeModal);
+    modalClose.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  }
+
+  async function showPageInModal(pageNum) {
+    if (!pdfDoc || !modalCanvas) return;
+    openModal();
+    try {
+      const page = await pdfDoc.getPage(pageNum);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const baseViewport = page.getViewport({ scale: 1 });
+      const maxH = window.innerHeight * 0.86;
+      const maxW = Math.min(window.innerWidth * 0.9, 900);
+      const fitScale = Math.min(maxH / baseViewport.height, maxW / baseViewport.width);
+      const viewport = page.getViewport({ scale: fitScale * dpr });
+
+      modalCanvas.width = Math.ceil(viewport.width);
+      modalCanvas.height = Math.ceil(viewport.height);
+      modalCanvas.style.width = (viewport.width / dpr) + 'px';
+      modalCanvas.style.height = (viewport.height / dpr) + 'px';
+
+      const ctx = modalCanvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
+    } catch (err) {
+      console.warn('Aperçu agrandi indisponible :', err);
+      closeModal();
+    }
+  }
+
+  try {
+    if (!window.pdfjsLib) throw new Error('pdf.js indisponible');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const targetHeightCss = window.innerWidth <= 760 ? Math.min(460, window.innerWidth * 0.62) : 460;
+
+    pdfDoc = await pdfjsLib.getDocument(CV_URL).promise;
+    container.innerHTML = '';
+
+    for (let n = 1; n <= pdfDoc.numPages; n++) {
+      const page = await pdfDoc.getPage(n);
+      const baseViewport = page.getViewport({ scale: 1 });
+      const cssScale = targetHeightCss / baseViewport.height;
+      const viewport = page.getViewport({ scale: cssScale * dpr });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+      canvas.style.height = targetHeightCss + 'px';
+      canvas.style.width = (viewport.width / dpr) + 'px';
+
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      const pageNum = n;
+      const pageWrap = document.createElement('button');
+      pageWrap.type = 'button';
+      pageWrap.className = 'cv-page tick';
+      pageWrap.dataset.pageNum = String(pageNum);
+      const enlargeTpl = (window.i18nMeta && window.i18nMeta[window.currentLang || 'fr'].enlargeLabel) || 'Agrandir la page {n} du CV';
+      pageWrap.setAttribute('aria-label', enlargeTpl.replace('{n}', pageNum));
+      pageWrap.appendChild(canvas);
+      pageWrap.addEventListener('click', () => showPageInModal(pageNum));
+      container.appendChild(pageWrap);
+    }
+  } catch (err) {
+    console.warn('Aperçu PDF.js indisponible, retour à l\'iframe :', err);
+    fallbackToIframe();
+  }
+})();
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+const canvas = document.getElementById('webgl');
+const heroSection = document.querySelector('.hero-3d');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isSmall = window.innerWidth < 700;
+
+try {
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isSmall ? 1.5 : 2));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  // pas de fond opaque : la photo de fond (E30) reste visible derrière le réseau 3D
+  scene.fog = new THREE.FogExp2(0xf7f6f3, 0.045);
+
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(1.4, 0.6, 9.5);
+
+  // lighting — subtle, just enough to shade the node spheres (gris neutre, plus de teinte bleue)
+  scene.add(new THREE.AmbientLight(0x3a3a40, 1.4));
+  const key = new THREE.PointLight(0xb3282e, 45, 30);
+  key.position.set(6, 4, 6);
+  scene.add(key);
+  const rim = new THREE.PointLight(0x5b5c62, 20, 30);
+  rim.position.set(-6, -3, -4);
+  scene.add(rim);
+
+  const rig = new THREE.Group();
+  scene.add(rig);
+
+  // core: wireframe "block" at the centre
+  const coreGeo = new THREE.IcosahedronGeometry(1.5, 1);
+  const coreEdges = new THREE.EdgesGeometry(coreGeo);
+  const coreMat = new THREE.LineBasicMaterial({ color: 0xb3282e, transparent: true, opacity: 0.55 });
+  const core = new THREE.LineSegments(coreEdges, coreMat);
+  rig.add(core);
+
+  // network: nodes + connecting edges around the core
+  const netGroup = new THREE.Group();
+  rig.add(netGroup);
+  const netGeo = new THREE.IcosahedronGeometry(4.2, 0);
+
+  const posAttr = netGeo.attributes.position;
+  const seen = new Set();
+  const nodeGeo = new THREE.SphereGeometry(0.07, 12, 12);
+  const nodeMat = new THREE.MeshStandardMaterial({ color: 0xb3282e, emissive: 0x330a0c, roughness: 0.45, metalness: 0.25 });
+  for (let i = 0; i < posAttr.count; i++) {
+    const v = new THREE.Vector3().fromBufferAttribute(posAttr, i);
+    const key2 = v.toArray().map(n => n.toFixed(2)).join(',');
+    if (seen.has(key2)) continue;
+    seen.add(key2);
+    const node = new THREE.Mesh(nodeGeo, nodeMat);
+    node.position.copy(v);
+    netGroup.add(node);
+  }
+  const netEdges = new THREE.EdgesGeometry(netGeo);
+  const netLineMat = new THREE.LineBasicMaterial({ color: 0x9a9ba1, transparent: true, opacity: 0.5 });
+  netGroup.add(new THREE.LineSegments(netEdges, netLineMat));
+
+  // ambient particle field
+  const particleCount = isSmall ? 350 : 900;
+  const particlePos = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount; i++) {
+    const r = 10 + Math.random() * 16;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos((Math.random() * 2) - 1);
+    particlePos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    particlePos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    particlePos[i * 3 + 2] = r * Math.cos(phi);
+  }
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+  const particleMat = new THREE.PointsMaterial({ color: 0x76777c, size: 0.045, transparent: true, opacity: 0.45, sizeAttenuation: true });
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
+
+  function resize() {
+    const w = heroSection.clientWidth;
+    const h = heroSection.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // scroll parallax — nudges the rig and fades particles across the whole pinned scrolly sequence
+  const heroWrapperEl = document.getElementById('hero-scroll');
+  let scrollT = 0;
+  let heroHeaderH = 0;
+  let heroScrollableHeight = 0;
+  function measureScrollRange() {
+    if (!heroWrapperEl) return;
+    heroHeaderH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+    heroScrollableHeight = heroWrapperEl.offsetHeight - heroSection.offsetHeight;
+  }
+  function computeScrollT() {
+    if (!heroWrapperEl || heroScrollableHeight <= 0) { scrollT = 0; return; }
+    const scrolled = heroHeaderH - heroWrapperEl.getBoundingClientRect().top;
+    scrollT = Math.min(Math.max(scrolled / heroScrollableHeight, 0), 1);
+  }
+  measureScrollRange();
+  window.addEventListener('scroll', computeScrollT, { passive: true });
+  window.addEventListener('resize', () => { measureScrollRange(); computeScrollT(); });
+  computeScrollT();
+
+  let raf;
+  const clock = new THREE.Clock();
+
+  function animate() {
+    raf = requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+
+    if (!reduceMotion) {
+      core.rotation.y += dt * 0.18;
+      core.rotation.x += dt * 0.07;
+      netGroup.rotation.y -= dt * 0.055;
+      netGroup.rotation.x += dt * 0.02;
+      particles.rotation.y += dt * 0.01;
+    }
+
+    camera.position.x += (1.4 - camera.position.x) * 0.04;
+    camera.position.y += (0.6 - scrollT * 2.2 - camera.position.y) * 0.04;
+    camera.lookAt(0, -scrollT * 0.6, 0);
+
+    rig.position.y = -scrollT * 0.8;
+    particleMat.opacity = 0.45 * Math.max(0, 1 - scrollT);
+
+    renderer.render(scene, camera);
+  }
+
+  renderer.render(scene, camera);
+  canvas.classList.add('is-ready');
+  if (!reduceMotion) animate(); 
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { cancelAnimationFrame(raf); }
+    else if (!reduceMotion) { animate(); }
+  });
+
+} catch (err) {
+  document.body.classList.add('no-webgl');
+  console.warn('Scène 3D indisponible :', err);
+}
+</script>
+
+</body>
+</html>
