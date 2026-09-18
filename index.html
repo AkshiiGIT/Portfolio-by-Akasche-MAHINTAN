@@ -128,15 +128,14 @@
     height: calc(100vh - var(--header-h));
     height: calc(100dvh - var(--header-h));
     min-height: 560px;
-    max-height: 980px;
   }
   .hero-photo{
     position: absolute; inset: 0; z-index: 0;
     background-image: url('assets/e30-m3.webp');
     background-size: cover;
-    background-position: 78% 55%;
+    background-position: 68% 62%;
     filter: grayscale(70%) brightness(1.1) contrast(0.96) saturate(0.55);
-    transform: scale(1.03);
+    transform: scale(1.18);
   }
   #webgl{
     position: absolute; inset: 0; width: 100%; height: 100%; display:block;
@@ -146,8 +145,8 @@
   .hero-vignette{
     position:absolute; inset:0; z-index:2; pointer-events:none;
     background:
-      linear-gradient(115deg, rgba(247,246,243,0.96) 0%, rgba(247,246,243,0.72) 38%, rgba(247,246,243,0.12) 62%),
-      radial-gradient(ellipse 90% 70% at 50% 100%, rgba(247,246,243,0.94) 0%, transparent 55%);
+      linear-gradient(115deg, rgba(247,246,243,0.9) 0%, rgba(247,246,243,0.68) 38%, rgba(247,246,243,0.12) 62%),
+      radial-gradient(ellipse 90% 70% at 50% 100%, rgba(247,246,243,0.88) 0%, transparent 55%);
   }
   @media (max-width: 760px){
     /* sur mobile le texte occupe toute la largeur (pas que la moitié gauche comme sur desktop) :
