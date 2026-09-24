@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akasche MAHINTAN</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      transition: background-color 0.5s ease;
+      color: #151515;
+    }
+
+    header {
+      background-color: #f4f4f4;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .car-selector {
+      display: flex;
+      align-items: center;
+    }
+
+    #car-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    #car-image {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #car-description {
+      margin-top: 10px;
+      text-align: center;
+      color: #151515;
+    }
+
+    /* Styles spécifiques pour Porsche 911 */
+    .porsche-911 {
+      background-color: #1C3B7B;
+      transition: background-color 0.5s ease;
+    }
+
+    .porsche-911 #car-image {
+      border: 4px solid #E61919;
+      transition: border-color 0.5s ease;
+    }
+
+    .porsche-911 #car-description {
+      color: #E61919;
+      transition: color 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Akasche MAHINTAN</h1>
+    <div class="car-selector">
+      <label for="car-select">Sélectionnez une voiture:</label>
+      <select id="car-select">
+        <option value="porsche-911">Porsche 911</option>
+      </select>
+    </div>
+  </header>
+
+  <div id="car-section">
+    <img id="car-image" src="assets/images/porsche.jpeg" alt="Porsche 911">
+    <p id="car-description">La Porsche 911 est un supercar allemand produit par Porsche.</p>
+  </div>
+
+  <script>
+    const carSelect = document.getElementById('car-select');
+    const body = document.body;
+    const carImage = document.getElementById('car-image');
+    const carDescription = document.getElementById('car-description');
+
+    carSelect.addEventListener('change', function() {
+      const selectedCar = carSelect.value;
+
+      // Changer la couleur de fond
+      switch (selectedCar) {
+        case 'porsche-911':
+          body.classList.add('porsche-911');
+          break;
+        default:
+          body.style.backgroundColor = '#FFFFFF';
+          break;
+      }
+
+      // Retirer la classe pour Porsche 911 si elle n'est pas sélectionnée
+      if (selectedCar !== 'porsche-911') {
+        body.classList.remove('porsche-911');
+      }
+
+      // Changer l'image
+      carImage.src = `assets/images/${selectedCar}.jpg`;
+
+      // Changer la description
+      switch (selectedCar) {
+        case 'porsche-911':
+          carDescription.textContent = 'La Porsche 911 est un supercar allemand produit par Porsche.';
+          break;
+        default:
+          carDescription.textContent = 'Veuillez sélectionner une voiture.';
+          break;
+      }
+    });
+  </script>
+</body>
+</html>
