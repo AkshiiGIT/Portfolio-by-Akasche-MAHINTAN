@@ -112,8 +112,8 @@
   }
 
   /* ---------- 3D hero (scrollytelling : voiture fixe, les scènes défilent) ---------- */
-  .hero-scroll{ position: relative; }
-  .hero-scroll.js-scenes{ height: calc(3 * (100dvh - var(--header-h))); }
+  .hero-scroll{ position: relative; background: var(--bg); padding: 0; border-bottom: none; }
+  .hero-scroll.js-scenes{ height: calc(3 * max(560px, 100dvh - var(--header-h))); }
 
   .hero-3d{
     position: relative;
@@ -990,8 +990,10 @@
 
     function measure() {
       headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      // la hauteur du wrapper est fixée en CSS pur (formule identique à celle du panneau épinglé,
+      // via max()) — on se contente ici de LIRE la hauteur réelle, jamais de l'écrire, pour éliminer
+      // tout risque de décalage lié au timing de mesure au premier chargement.
       const pinH = pin.getBoundingClientRect().height;
-      wrapper.style.height = (pinH * N) + 'px';
       scrollableHeight = (pinH * N) - pinH;
     }
 
@@ -1050,6 +1052,7 @@
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
+    window.addEventListener('load', onResize);
   })();
 </script>
 
